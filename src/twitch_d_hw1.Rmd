@@ -1,0 +1,49 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+## DATA https://www.kaggle.com/aayushmishra1512/twitchdata 
+```{r}
+#twitchdata <- read.csv("CIS 546 Data Visualization/twitchdata-update.csv")
+head(twitchdata)
+```
+
+##First Plot
+```{r}
+td <- ggplot(data = twitchdata,mapping = aes(x = Followers.gained,
+                                             y = Stream.time.minutes.)) + geom_point(color = "purple", alpha = .05) +
+  geom_smooth(method = "lm", se =FALSE) + scale_x_log10() + scale_y_log10() +
+   labs(x = "Followers Gained",
+       y = "Streaming",
+       title = "Regression for Followers Gained on Twitch in Time Stream",
+       subtitle = "Data point are Followers Gained-Stream minutes",
+       caption = "Source:Kaggle")
+td
+ggsave(file = "FollowersGainedStream_minutes.png", plot = td)
+```
+
+
+##Second Plot
+```{r}
+slanguage <- c("English", "French", "German", "Korean", "Portuguese",
+               "Russian", "Spanish")
+language_S <- subset(twitchdata, subset = Language %in% slanguage)
+
+head(language_S)
+```
+
+
+```{r}
+ml <- ggplot(data = language_S, mapping = aes(x = Followers, y = Peak.viewers)) +
+  geom_point(alpha = 0.2) +
+  geom_smooth() + scale_y_log10() +
+  theme(axis.text.x = element_text(angle = 90)) +
+  facet_wrap(~Language, ncol = 4) +
+  labs(x = "Followers",
+       y = "Viewers",
+       title = "Viewers for Streamers on Twitch by selected Language",
+       subtitle = "Source:Kaggle")
+ml
+ggsave(file = "followers_Language_facetNcol.png", plot = ml)
+```
+
